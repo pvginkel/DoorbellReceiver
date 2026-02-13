@@ -1,0 +1,9 @@
+menu "Device Configuration"
+
+    orsource "$IDF_PATH/examples/common_components/env_caps/$IDF_TARGET/Kconfig.env_caps"
+
+    config DEVICE_DOORBELL_PIN
+        int "Doorbell pin"
+        default -1
+
+endmenu
