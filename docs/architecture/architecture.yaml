@@ -1,0 +1,44 @@
+schemaVersion: "0.1"
+producer: doorbell-receiver
+
+# Doorbell Receiver — ESP32-S3 firmware that watches a doorbell pushbutton (GPIO)
+# and publishes a press event over MQTT.
+#
+# This repo introduces the FIRMWARE, not the physical device (registered in IoT
+# Support, generated as a device: instance there). Universal esp-mdm platform
+# edges only — the device's whole function (the doorbell trigger) rides the same
+# MQTT broker. Addresses are NVS-provisioned by IoT Support → no boundBy.
+
+systemSoftware:
+  - id: ss:doorbell-receiver,5862dd9d-b6a2-482b-96de-b312507ded9b
+    label: Doorbell Receiver firmware
+    summary: >-
+      ESP-IDF firmware (ESP32-S3) that debounces a doorbell pushbutton on GPIO
+      and publishes a press trigger over MQTT; managed over the air by IoT Support.
+    introduced: 2026-02-13
+    lifecycle: active
+    stereotype: SoftwareProduct
+    sourceRepository: git:pvginkel/DoorbellReceiver
+    stats:
+      mcu: esp32-s3
+
+relations:
+  - id: rel:doorbell-receiver-consumes-iotsupport
+    source: ss:doorbell-receiver,5862dd9d-b6a2-482b-96de-b312507ded9b
+    target: svc:iotsupport-api,b7c5b5ba-36eb-47b8-bf7e-5c50fa1a3656
+    type: Association
+  - id: rel:doorbell-receiver-consumes-pub-sub
+    source: ss:doorbell-receiver,5862dd9d-b6a2-482b-96de-b312507ded9b
+    target: cap:pub-sub-broker
+    type: Association
+  - id: rel:doorbell-receiver-consumes-iam
+    source: ss:doorbell-receiver,5862dd9d-b6a2-482b-96de-b312507ded9b
+    target: cap:iam
+    type: Association
+
+  # ── Home Assistant MQTT integration: publishes HA discovery entities
+  # (the button/switch) over the broker; topic convention hardcoded → no boundBy. ──
+  - id: rel:doorbell-receiver-ha-mqtt
+    source: ss:doorbell-receiver,5862dd9d-b6a2-482b-96de-b312507ded9b
+    target: svc:home-assistant-mqtt,23572189-9185-4a6d-a073-2b2820578e11
+    type: Association
