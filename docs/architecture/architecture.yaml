@@ -42,3 +42,10 @@ relations:
     source: ss:doorbell-receiver,5862dd9d-b6a2-482b-96de-b312507ded9b
     target: svc:home-assistant-mqtt,23572189-9185-4a6d-a073-2b2820578e11
     type: Association
+
+  # Realizes the IoT-device capability — the selection axis for the IoT view
+  # (in-house ESP32 firmware, managed by IoTSupport, integrated via MQTT discovery).
+  - id: rel:doorbell-receiver-realizes-iot-device
+    source: ss:doorbell-receiver,5862dd9d-b6a2-482b-96de-b312507ded9b
+    target: cap:iot-device
+    type: Realization
