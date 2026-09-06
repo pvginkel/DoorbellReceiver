@@ -1,0 +1,29 @@
+# Build automation for DoorbellReceiver.
+# Schema: https://kubecoder.home/help/reference/project-yaml/
+
+projects:
+  root:
+    description: >-
+      ESP32-S3 doorbell receiver firmware — debounces a doorbell pushbutton on
+      GPIO and publishes the press over MQTT. Built with ESP-IDF 5.5.3 against
+      the shared components in /work/esp-libs.
+    # The firmware build. `AaC/DoorbellReceiver` is a second job on this repo:
+    # it runs Jenkinsfile.architecture, the architecture-as-code producer.
+    jenkins: Firmware/DoorbellReceiver
+
+    # No setup statement: idf.py resolves and downloads the managed components
+    # itself on the first build, into the gitignored managed_components/.
+
+    # What CI runs. `cexec` supplies the activation the Jenkinsfile spells as
+    # /opt/esp/entrypoint.sh — the esp-idf catalog entry wraps every command.
+    build: cexec esp-idf idf.py build
+
+    # test: unset — the repo has no tests. Firmware correctness is checked by
+    # flashing a device, which needs hardware this environment does not have.
+
+    # The architecture-as-code gate, as Jenkinsfile.architecture runs it. Note
+    # this is a NETWORK CALL from inside a gate: the script POSTs each artifact
+    # to https://architecture.webathome.org/api/validate and reports its verdict,
+    # so `kc project lint` is red whenever that service is unreachable. It runs
+    # in the dev container on purpose — the script is python3 stdlib only.
+    lint: ./scripts/arch-validate.py docs/architecture/*.yaml

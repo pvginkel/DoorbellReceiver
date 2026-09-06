@@ -1,0 +1,25 @@
+# The DoorbellReceiver environment: ESP32-S3 firmware built with ESP-IDF.
+# Schema: https://kubecoder.home/help/reference/config-yaml/
+
+repos:
+  # The shared ESP component library. It is not vendored: the top-level
+  # CMakeLists.txt reads ../esp-libs/<component>/sdkconfig.defaults and
+  # main/idf_component.yml declares ../../esp-libs/<component> path
+  # dependencies, so CMake configure fails outright without this checkout.
+  # This is the same layout the Jenkinsfile arranges by cloning esp-libs
+  # beside the repo. Read-only here — nothing in this environment writes it.
+  - url: https://github.com/pvginkel/esp-libs.git
+    shared: true
+
+capabilities:
+  github: rw
+
+tools:
+  # ESP-IDF 5.5.3 — idf.py with the Xtensa and RISC-V toolchains, the same
+  # version the Jenkinsfile pins (espressif/idf:v5.5.3). Its ccache overlay
+  # and its /opt/esp/entrypoint.sh activation wrapper are declared on the
+  # catalog entry, so every `cexec esp-idf` command is already activated.
+  - use: esp-idf
+
+setup:
+  - kc project setup
