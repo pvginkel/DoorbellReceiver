@@ -20,6 +20,3 @@ tools:
   # and its /opt/esp/entrypoint.sh activation wrapper are declared on the
   # catalog entry, so every `cexec esp-idf` command is already activated.
   - use: esp-idf
-
-setup:
-  - kc project setup
