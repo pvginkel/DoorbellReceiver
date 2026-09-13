@@ -20,3 +20,5 @@ tools:
   # and its /opt/esp/entrypoint.sh activation wrapper are declared on the
   # catalog entry, so every `cexec esp-idf` command is already activated.
   - use: esp-idf
+  # Native C/C++ toolchain — provides clang-format for the lint gate.
+  - use: native
