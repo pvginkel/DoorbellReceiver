@@ -26,4 +26,8 @@ projects:
     # to https://architecture.webathome.org/api/validate and reports its verdict,
     # so `kc project lint` is red whenever that service is unreachable. It runs
     # in the dev container on purpose — the script is python3 stdlib only.
-    lint: ./scripts/arch-validate.py docs/architecture/*.yaml
+    # Then the formatting gate: every C/C++ source under main/ must match
+    # main/.clang-format, checked with the native toolchain's clang-format.
+    lint:
+      - ./scripts/arch-validate.py docs/architecture/*.yaml
+      - cexec native sh -c 'find main \( -name "*.c" -o -name "*.cpp" -o -name "*.h" -o -name "*.hpp" \) -print0 | xargs -0 clang-format --dry-run --Werror'
